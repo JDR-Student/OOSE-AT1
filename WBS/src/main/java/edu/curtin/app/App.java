@@ -1,7 +1,7 @@
 package edu.curtin.app;
 
-import edu.curtin.app.task.WBS;
 import edu.curtin.app.menu.*;
+import edu.curtin.app.task.WBS;
 
 import java.io.*;
 import java.util.logging.*;
@@ -32,6 +32,10 @@ public class App
 
     private static void menu(WBS wbs)
     {
+        // Defaults.
+        User.setEstimators(3);
+        User.setApproach(3);
+
         Menu menu;
         int option = 0;
 
@@ -42,26 +46,22 @@ public class App
             {
                 wbs.display();
 
-                option = User.getOption();
+                option = User.requestOption();
                 switch(option)
                 {
                     // Estimate effort.
-                    case 1:
-                        menu = new Estimate();
-                        menu.option(wbs);
+                    case 1: menu = new Estimate(wbs);
                         break;
                     // Configure.
-                    case 2:
-                        menu = new Configure();
-                        menu.option(wbs);
+                    case 2: menu = new Configure();
                         break;
                     // Quit.
-                    case 3:
-                        System.out.println("Exiting...");
+                    case 3: menu = new Quit();
                         break;
-                    // If the menu option is invalid.
-                    default: System.out.println("Invalid menu option.");
+                    // Invalid menu option.
+                    default: menu = new Default();
                 }
+                menu.option();
             }
             catch (IllegalStateException | IllegalArgumentException exception)
             {

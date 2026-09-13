@@ -5,8 +5,33 @@ import java.util.*;
 public class User
 {
     private static Scanner input = new Scanner(System.in);
+    private static int estimators;
+    private static int approach;
 
-    public static int getOption()
+    // Getters.
+    public static int getEstimators()
+    {
+        return estimators;
+    }
+
+    public static int getApproach()
+    {
+        return approach;
+    }
+
+    // Setters.
+    public static void setEstimators(int estimators)
+    {
+        User.estimators = estimators;
+    }
+
+    public static void setApproach(int approach)
+    {
+        User.approach = approach;
+    }
+
+    // Menu options.
+    public static int requestOption()
     {
         System.out.println("\n> 1. Estimate effort.");
         System.out.println("> 2. Configure.");
@@ -15,25 +40,48 @@ public class User
         return Util.parseInt(input.nextLine());
     }
 
-    public static String getId()
+    public static String requestId()
     {
         System.out.print("Please enter a task id: ");
         return input.nextLine();
     }
 
-    public static int getEstimate()
+    private static int requestEstimate()
     {
-        System.out.print("Please enter an estimate: ");
-        return Util.parseInt(input.nextLine());
+        int estimate = -1;
+        do
+        {
+            System.out.print("Please enter an estimate: ");
+            estimate = Util.parseInt(input.nextLine());
+        } while (estimate < 0);
+        return estimate;
     }
 
-    public static int getEstimators()
+    public static List<Integer> requestEstimates()
     {
-        System.out.print("Please enter the number of estimators: ");
-        return Util.parseInt(input.nextLine());
+        System.out.println("There are %d estimators.".formatted(estimators));
+
+        List<Integer> estimates = new ArrayList<>();
+        for (int i = 0; i < estimators; i++)
+        {
+            estimates.add(requestEstimate());
+        }
+        return estimates;
     }
 
-    public static int getApproach()
+    public static int requestEstimators()
+    {
+        int estimators = -1;
+        do
+        {
+            System.out.print("Please enter the number of estimators: ");
+            estimators = Util.parseInt(input.nextLine());
+        } while (estimators < 0);
+        return estimators;
+    }
+
+    // Sub-menu options.
+    public static int requestApproach()
     {
         System.out.println("\n> 1. Highest estimate.");
         System.out.println("> 2. Median estimate.");
@@ -42,7 +90,7 @@ public class User
         return Util.parseInt(input.nextLine());
     }
 
-    public static int getRevised()
+    public static int requestRevised()
     {
         System.out.print("Please enter a revised estimate: ");
         return Util.parseInt(input.nextLine());

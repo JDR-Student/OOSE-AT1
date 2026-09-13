@@ -1,11 +1,11 @@
 package edu.curtin.app.menu;
 
 // Concrete strategy.
-public class Default implements Menu
+public class Quit implements Menu
 {
     @Override
     public void option()
     {
-        System.out.println("Invalid menu option.");
+        System.out.println("Exiting...");
     }
 }

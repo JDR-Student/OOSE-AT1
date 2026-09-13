@@ -1,30 +1,38 @@
 package edu.curtin.app.menu;
 
-import edu.curtin.app.task.WBS;
+import java.util.*;
+
 import edu.curtin.app.User;
 import edu.curtin.app.Util;
-
-import java.util.*;
+import edu.curtin.app.submenu.*;
+import edu.curtin.app.submenu.Default;
+import edu.curtin.app.task.WBS;
 
 // Concrete strategy.
 public class Estimate implements Menu
 {
-    private List<Integer> estimates = new ArrayList<>();
+    private WBS wbs;
+
+    public Estimate(WBS wbs)
+    {
+        this.wbs = wbs;
+    }
 
     @Override
-    public void option(WBS wbs)
+    public void option()
     {
-        String id = User.getId();
+        String id = User.requestId();
         Util.check(!wbs.hasTask(id), "The task does not exist.");
 
-        int estimators = Default.getEstimators();
-        System.out.println("There are %d estimators.".formatted(estimators));
-        for (int i = 0; i < estimators; i++)
-        {
-            estimates.add(User.getEstimate());
-        }
+        List<Integer> estimates = User.requestEstimates();
 
+        wbs.update(id, getEffort(estimates));
+    }
+
+    private int getEffort(List<Integer> estimates)
+    {
         int effort = 0;
+
         // If the effort estimates are the same.
         if (estimates.stream().distinct().count() == 1)
         {
@@ -33,50 +41,21 @@ public class Estimate implements Menu
         // If the effort estimates are different.
         else
         {
-            switch(Default.getApproach())
+            SubMenu submenu;
+            switch(User.getApproach())
             {
-                case 1: effort = highest();
+                case 1: submenu = new Highest(estimates);
                     break;
-                case 2: effort = median();
+                case 2: submenu = new Median(estimates);
                     break;
-                case 3: effort = revised();
+                case 3: submenu = new Revised();
                     break;
-                default: System.out.println("Invalid reconciliation approach.");
+                // Invalid reconciliation approach.
+                default: submenu = new Default();
             }
+            effort = submenu.option();
         }
 
-        // If the effort estimate is known.
-        if (effort > 0)
-        {
-            wbs.update(id, effort);
-        }
-    }
-
-    private int highest()
-    {
-        return Collections.max(estimates);
-    }
-
-    private int median()
-    {
-        // Sort the estimates in ascending order.
-        Collections.sort(estimates);
-
-        int size = estimates.size();
-        // If the size is odd.
-        if (size % 2 == 1)
-        {
-            return estimates.get(size / 2);
-        }
-        // If the size is even.
-        else
-        {
-            return (estimates.get(size / 2) + estimates.get((size / 2) - 1)) / 2;
-        }
-    }
-
-    private int revised()
-    {
-        return User.getRevised();
+        return effort;
     }
 }

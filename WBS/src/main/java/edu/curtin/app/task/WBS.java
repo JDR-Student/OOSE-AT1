@@ -8,7 +8,7 @@ import java.util.*;
 // Work Breakdown Structure.
 public class WBS
 {
-    public Map<String, Task> tasks;
+    private Map<String, Task> tasks;
 
     public WBS()
     {
@@ -46,7 +46,7 @@ public class WBS
         }
     }
 
-    public void put(String root, String id, Task task)
+    private void put(String root, String id, Task task)
     {
         Task supertask = find(root);
 
