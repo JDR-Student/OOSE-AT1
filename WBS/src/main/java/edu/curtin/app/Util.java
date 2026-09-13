@@ -1,3 +1,17 @@
+/*
+ File:          Util.java
+ Author:        Jack Dylan Rendle
+ Unit:          COMP2003
+
+ Purpose:       To provide convenient methods to check conditions and parse integers.
+ Comments:      None.
+ Requires:      None.
+ Reference:     None.
+
+ Created:       11/09/2026
+ Last Modified: 13/09/2026
+*/
+
 package edu.curtin.app;
 
 public class Util
@@ -6,7 +20,7 @@ public class Util
     {
         if (condition)
         {
-            throw new IllegalStateException(message);
+            throw new IllegalArgumentException(message);
         }
     }
 
@@ -18,7 +32,7 @@ public class Util
         }
         catch (NumberFormatException exception)
         {
-            throw new IllegalArgumentException("Unable to parse '%s' as an integer.".formatted(field));
+            throw new IllegalArgumentException("Unable to parse '%s' as an integer.".formatted(field), exception);
         }
     }
 }

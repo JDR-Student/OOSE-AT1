@@ -1,3 +1,17 @@
+/*
+ File:          SuperTask.java
+ Author:        Jack Dylan Rendle
+ Unit:          COMP2003
+
+ Purpose:       The composite class for the composite pattern.
+ Comments:      None.
+ Requires:      None.
+ Reference:     None.
+
+ Created:       31/08/2026
+ Last Modified: 13/09/2026
+*/
+
 package edu.curtin.app.task;
 
 import java.io.*;
@@ -56,6 +70,8 @@ public class SuperTask implements Task
         }
     }
 
+    // Recursion is required to find a task that may be a sub-task.
+    @SuppressWarnings({"PMD.AvoidReassigningLoopVariables"})
     // Find a task.
     @Override
     public Task find(String id)

@@ -1,3 +1,17 @@
+/*
+ File:          IO.java
+ Author:        Jack Dylan Rendle
+ Unit:          COMP2003
+
+ Purpose:       To read and write the WBS to a text file.
+ Comments:      None.
+ Requires:      Utilises WBS.
+ Reference:     None.
+
+ Created:       10/09/2026
+ Last Modified: 10/09/2026
+*/
+
 package edu.curtin.app;
 
 import edu.curtin.app.task.WBS;
@@ -6,14 +20,17 @@ import java.io.*;
 
 public class IO
 {
-    public static void read(String file, WBS wbs) throws IOException
+    public static void read(String file, WBS wbs) throws IOException, ParseFileException
     {
         try (BufferedReader reader = new BufferedReader(new FileReader(file)))
         {
             String line = reader.readLine();
 
-            // If the first line of the first is empty.
-            Util.check(line == null, "The file is empty.");
+            // If the first line of the file is empty.
+            if (line == null)
+            {
+                throw new ParseFileException("The file is empty.");
+            }
 
             do
             {
@@ -38,7 +55,7 @@ public class IO
                         }
                         wbs.add(root, id, description, effort);
                         break;
-                    default: throw new IllegalStateException("Each line must contain between two and four parts.");
+                    default: throw new ParseFileException("Each line must contain between two and four parts.");
                 }
             } while ((line = reader.readLine()) != null);
         }

@@ -1,4 +1,16 @@
-// The wayback machine must be used to view this page. https://www.geeksforgeeks.org/java/composite-design-pattern-in-java/
+/*
+ File:          Task.java
+ Author:        Jack Dylan Rendle
+ Unit:          COMP2003
+
+ Purpose:       The component interface for the composite pattern.
+ Comments:      None.
+ Requires:      None.
+ Reference:     None.
+
+ Created:       31/08/2026
+ Last Modified: 13/09/2026
+*/
 
 package edu.curtin.app.task;
 

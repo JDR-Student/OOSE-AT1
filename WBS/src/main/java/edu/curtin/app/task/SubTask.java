@@ -1,4 +1,20 @@
+/*
+ File:          SubTask.java
+ Author:        Jack Dylan Rendle
+ Unit:          COMP2003
+
+ Purpose:       The leaf class for the composite pattern.
+ Comments:      None.
+ Requires:      Utilises util.
+ Reference:     None.
+
+ Created:       31/08/2026
+ Last Modified: 13/09/2026
+*/
+
 package edu.curtin.app.task;
+
+import edu.curtin.app.Util;
 
 import java.io.*;
 
@@ -46,10 +62,7 @@ public class SubTask implements Task
     public void setEffort(int effort) throws IllegalArgumentException
     {
         // If the effort estimate is negative.
-        if (effort < 0)
-        {
-            throw new IllegalArgumentException("The effort estimate must be a positive integer.");
-        }
+        Util.check(effort < 0, "The effort estimate must be a positive integer.");
 
         this.effort = effort;
     }

@@ -1,5 +1,5 @@
 /*
- File:          Revised.java
+ File:          Invalid.java
  Author:        Jack Dylan Rendle
  Unit:          COMP2003
 
@@ -14,15 +14,13 @@
 
 package edu.curtin.app.submenu;
 
-import edu.curtin.app.User;
-
 // Concrete strategy.
-public class Revised implements SubMenu
+public class Invalid implements SubMenu
 {
-    // Get a single revised effort estimate.
     @Override
     public int option()
     {
-        return User.requestRevised();
+        System.out.println("Invalid reconciliation approach.");
+        return 0; // Set the effort estimate as unknown.
     }
 }

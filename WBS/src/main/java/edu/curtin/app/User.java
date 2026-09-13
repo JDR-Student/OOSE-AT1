@@ -1,3 +1,17 @@
+/*
+ File:          User.java
+ Author:        Jack Dylan Rendle
+ Unit:          COMP2003
+
+ Purpose:       To request user input.
+ Comments:      None.
+ Requires:      Utilises util.
+ Reference:     None.
+
+ Created:       12/09/2026
+ Last Modified: 13/09/2026
+*/
+
 package edu.curtin.app;
 
 import java.util.*;
@@ -5,30 +19,6 @@ import java.util.*;
 public class User
 {
     private static Scanner input = new Scanner(System.in);
-    private static int estimators;
-    private static int approach;
-
-    // Getters.
-    public static int getEstimators()
-    {
-        return estimators;
-    }
-
-    public static int getApproach()
-    {
-        return approach;
-    }
-
-    // Setters.
-    public static void setEstimators(int estimators)
-    {
-        User.estimators = estimators;
-    }
-
-    public static void setApproach(int approach)
-    {
-        User.approach = approach;
-    }
 
     // Menu options.
     public static int requestOption()
@@ -48,16 +38,16 @@ public class User
 
     private static int requestEstimate()
     {
-        int estimate = -1;
-        do
-        {
-            System.out.print("Please enter an estimate: ");
-            estimate = Util.parseInt(input.nextLine());
-        } while (estimate < 0);
+        System.out.print("Please enter an estimate: ");
+        int estimate = Util.parseInt(input.nextLine());
+
+        // If the effort estimate is negative.
+        Util.check(estimate < 0, "The effort estimate must be a positive integer.");
+
         return estimate;
     }
 
-    public static List<Integer> requestEstimates()
+    public static List<Integer> requestEstimates(int estimators)
     {
         System.out.println("There are %d estimators.".formatted(estimators));
 
@@ -71,12 +61,12 @@ public class User
 
     public static int requestEstimators()
     {
-        int estimators = -1;
-        do
-        {
-            System.out.print("Please enter the number of estimators: ");
-            estimators = Util.parseInt(input.nextLine());
-        } while (estimators < 0);
+        System.out.print("Please enter the number of estimators: ");
+        int estimators = Util.parseInt(input.nextLine());
+
+        // If the number of estimators is negative.
+        Util.check(estimators < 0, "The number of estimators must be a positive integer.");
+
         return estimators;
     }
 
@@ -92,8 +82,13 @@ public class User
 
     public static int requestRevised()
     {
-        System.out.print("Please enter a revised estimate: ");
-        return Util.parseInt(input.nextLine());
+        System.out.print("Please enter a single revised estimate: ");
+        int estimate = Util.parseInt(input.nextLine());
+
+        // If the effort estimate is negative.
+        Util.check(estimate < 0, "The effort estimate must be a positive integer.");
+
+        return estimate;
     }
 
     public static void close()

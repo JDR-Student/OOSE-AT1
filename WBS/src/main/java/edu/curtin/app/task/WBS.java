@@ -1,3 +1,17 @@
+/*
+ File:          WBS.java
+ Author:        Jack Dylan Rendle
+ Unit:          COMP2003
+
+ Purpose:       The context for the composite pattern.
+ Comments:      None.
+ Requires:      Utilises util.
+ Reference:     None.
+
+ Created:       11/09/2026
+ Last Modified: 13/09/2026
+*/
+
 package edu.curtin.app.task;
 
 import edu.curtin.app.Util;
@@ -83,6 +97,8 @@ public class WBS
         return false;
     }
 
+    // Recursion is required to find a task that may be a sub-task.
+    @SuppressWarnings({"PMD.AvoidReassigningLoopVariables"})
     // Find a task.
     public Task find(String id)
     {
