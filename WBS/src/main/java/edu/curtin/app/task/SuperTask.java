@@ -39,17 +39,29 @@ public class SuperTask implements Task
         this.description = description;
     }
 
+    // Add a task or super-task.
     public void add(String id, Task task)
     {
         tasks.put(id, task);
     }
 
-    // Find a super-task.
+    // Update the effort estimate of a task or sub-task.
+    @Override
+    public void update(int effort)
+    {
+        for (Task task : tasks.values())
+        {
+            // Recursion.
+            task.update(effort);
+        }
+    }
+
+    // Find a task.
     @Override
     public Task find(String id)
     {
         // If this is the task.
-        if (this.id.equals(id))
+        if (getId().equals(id))
         {
             return this;
         }
@@ -57,10 +69,10 @@ public class SuperTask implements Task
         {
             for (Task task : tasks.values())
             {
-                // Recursion.
+                // Recursively find the task.
                 task = task.find(id);
 
-                // If the task is a sub-task.
+                // If found.
                 if (task != null)
                 {
                     return task;
@@ -69,6 +81,30 @@ public class SuperTask implements Task
         }
 
         return null;
+    }
+
+    // Sum the total effort estimate of this super-task and any sub-tasks.
+    @Override
+    public int sumEffort()
+    {
+        int estimate = 0;
+        for (Task task : tasks.values())
+        {
+            estimate += task.sumEffort();
+        }
+        return estimate;
+    }
+
+    // Count any unknown effort estimates.
+    @Override
+    public int countUnknown()
+    {
+        int count = 0;
+        for (Task task : tasks.values())
+        {
+            count += task.countUnknown();
+        }
+        return count;
     }
 
     // Display.
@@ -88,18 +124,13 @@ public class SuperTask implements Task
     @Override
     public void export(BufferedWriter writer) throws IOException
     {
-
         writer.write("; %s ; %s".formatted(id, description));
         writer.newLine();
 
-        // If there are sub-tasks.
-        if (!tasks.isEmpty())
+        for (Task task : tasks.values())
         {
-            for (Task task : tasks.values())
-            {
-                writer.write("%s ".formatted(id));
-                task.export(writer);
-            }
+            writer.write("%s ".formatted(id));
+            task.export(writer);
         }
     }
 }

@@ -9,7 +9,6 @@ public class SubTask implements Task
     private String description;
     private int effort;
 
-    // TODO validation
     public SubTask(String id, String description, int effort)
     {
         this.id = id;
@@ -55,23 +54,54 @@ public class SubTask implements Task
         this.effort = effort;
     }
 
-    // Find a super-task.
+    // Update the effort estimate.
+    @Override
+    public void update(int effort)
+    {
+        setEffort(effort);
+    }
+
+    // If the effort estimate is known, then return true.
+    private boolean isKnown()
+    {
+        return effort > 0;
+    }
+
+    // Find a task.
     @Override
     public Task find(String id)
     {
-        return null; // As this is a sub-task.
+        // If this is the task.
+        if (getId().equals(id))
+        {
+            return this;
+        }
+
+        return null;
+    }
+
+    // Sum the total effort estimate.
+    @Override
+    public int sumEffort()
+    {
+        return effort;
+    }
+
+    // Count any unknown effort estimates.
+    @Override
+    public int countUnknown()
+    {
+        return isKnown() ? 0 : 1;
     }
 
     // Display.
     @Override
     public void display(String indent)
     {
-        // If the effort estimate is known.
-        if (effort > 0)
+        if (isKnown())
         {
             System.out.println("%s%s: %s, effort = %d".formatted(indent, id, description, effort));
         }
-        // If the effort estimate is unknown.
         else
         {
             System.out.println("%s%s: %s".formatted(indent, id, description));
@@ -82,12 +112,10 @@ public class SubTask implements Task
     @Override
     public void export(BufferedWriter writer) throws IOException
     {
-        // If the effort estimate is known.
-        if (effort > 0)
+        if (isKnown())
         {
             writer.write("; %s ; %s ; %d".formatted(id, description, effort));
         }
-        // If the effort estimate is unknown.
         else
         {
             writer.write("; %s ; %s ;".formatted(id, description));

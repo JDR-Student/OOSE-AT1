@@ -15,4 +15,4 @@ J ; M ; Player interface ;
 N ; O ; Functionality ;
 N ; P ; Playability ;
 N ; Q ; Rework ;
-; R ; Release ; 
+; R ; Release ;
