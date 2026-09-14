@@ -19,7 +19,7 @@ import edu.curtin.app.User;
 // Concrete strategy.
 public class Revised implements SubMenu
 {
-    // Get a single revised effort estimate.
+    // Request a single revised effort estimate.
     @Override
     public int option()
     {

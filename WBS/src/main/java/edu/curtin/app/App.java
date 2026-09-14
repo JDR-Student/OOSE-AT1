@@ -5,26 +5,21 @@
 
  Purpose:       To display the WBS and the menu.
  Comments:      None.
- Requires:      Utilises sub-menu and WBS.
+ Requires:      Utilises user, util, and WBS.
  Reference:     None.
 
  Created:       31/08/2026
- Last Modified: TODO
+ Last Modified: 14/09/2026
 */
 
 package edu.curtin.app;
 
-import edu.curtin.app.submenu.*;
 import edu.curtin.app.task.WBS;
 
 import java.io.*;
-import java.util.*;
-import java.util.logging.*;
 
 public class App
 {
-    // TODO private static final Logger logger = Logger.getLogger(App.class.getName());
-
     public static void main(String[] args)
     {
         try
@@ -39,9 +34,9 @@ public class App
         }
         catch (IOException | ParseFileException | IllegalArgumentException exception)
         {
+            Util.logger.warning(() -> exception.getMessage());
             System.out.println(exception.getMessage());
         }
-
         User.close();
     }
 
@@ -59,12 +54,12 @@ public class App
                 switch(option)
                 {
                     // Estimate effort.
-                    case 1: estimate(wbs);
+                    case 1: wbs.updateEffort(User.requestId());
                         break;
                     // Configure.
                     case 2:
-                        Default.setEstimators(User.requestEstimators());
-                        Default.setApproach(User.requestApproach());
+                        User.requestEstimators();
+                        User.requestApproach();
                         break;
                     // Quit.
                     case 3: System.out.println("Exiting...");
@@ -75,45 +70,9 @@ public class App
             }
             catch (IllegalArgumentException exception)
             {
+                Util.logger.warning(() -> exception.getMessage());
                 System.out.println(exception.getMessage());
             }
         } while (option != 3);
-    }
-
-    private static void estimate(WBS wbs)
-    {
-        String id = User.requestId();
-        Util.check(!wbs.hasTask(id), "The task does not exist.");
-
-        List<Integer> estimates = User.requestEstimates(Default.getEstimators());
-
-        int effort;
-        // If the effort estimates are the same.
-        if (estimates.stream().distinct().count() == 1)
-        {
-            effort = estimates.getFirst();
-        }
-        // If the effort estimates are different.
-        else
-        {
-            SubMenu submenu;
-            switch(Default.getApproach())
-            {
-                // Highest estimate.
-                case 1: submenu = new Highest(estimates);
-                    break;
-                // Median estimate.
-                case 2: submenu = new Median(estimates);
-                    break;
-                // A single revised estimate.
-                case 3: submenu = new Revised();
-                    break;
-                // Invalid reconciliation approach.
-                default: submenu = new Invalid();
-            }
-            effort = submenu.option();
-        }
-
-        wbs.update(id, effort);
     }
 }

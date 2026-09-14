@@ -14,7 +14,7 @@ b) Appropriate use of a map.
   A map was used within the WBS to contain all tasks, including super-tasks and sub-tasks. Additionally, a map was used within each super-task to hold all associated sub-tasks.
 
 g) Clear and correct class diagram of your whole application.
-  I did not include accessors and mutators methods unless necessary. For example, I only included accessors and mutators methods for the default class as that class is used as an intermediate object to store the number of estimators and the reconciliation approach.
+  I did not include accessors and mutators methods.
 
 a) General code quality, as assessed by linting tool(s).
   In both the context WBS and the composite class SuperTask, the PMD warning “AvoidReassigningLoopVariables” was suppressed within the find method as recursion is required to find a task that may be a sub-task many hierarchical layers deep.

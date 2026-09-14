@@ -9,13 +9,17 @@
  Reference:     None.
 
  Created:       11/09/2026
- Last Modified: 13/09/2026
+ Last Modified: 14/09/2026
 */
 
 package edu.curtin.app;
 
+import java.util.logging.*;
+
 public class Util
 {
+    public static final Logger logger = Logger.getLogger(App.class.getName());
+
     public static void check(boolean condition, String message)
     {
         if (condition)

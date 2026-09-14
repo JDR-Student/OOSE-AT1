@@ -9,7 +9,7 @@
  Reference:     None.
 
  Created:       11/09/2026
- Last Modified: 13/09/2026
+ Last Modified: 14/09/2026
 */
 
 package edu.curtin.app.task;
@@ -30,36 +30,6 @@ public class WBS
         tasks = new TreeMap<>();
     }
 
-    public void add(String root, String id, String description)
-    {
-        // Super-task.
-        if (root.isEmpty())
-        {
-            tasks.put(id, new SuperTask(id, description));
-        }
-        // Super-task as a sub-task.
-        else
-        {
-            // Find the super-task and add the sub-task.
-            put(root, id, new SuperTask(id, description));
-        }
-    }
-
-    public void add(String root, String id, String description, int effort)
-    {
-        // Task.
-        if (root.isEmpty())
-        {
-            tasks.put(id, new SubTask(id, description, effort));
-        }
-        // Task as a sub-task.
-        else
-        {
-            // Find the super-task and add the sub-task.
-            put(root, id, new SubTask(id, description, effort));
-        }
-    }
-
     private void put(String root, String id, Task task)
     {
         Task supertask = find(root);
@@ -71,30 +41,52 @@ public class WBS
         ((SuperTask)supertask).add(id, task);
     }
 
+    public void add(String root, String id, String description)
+    {
+        // Super-task.
+        if (root.isEmpty())
+        {
+            tasks.put(id, new SuperTask(id, description));
+            Util.logger.info(() -> ("Added task '%s' as a super-task.".formatted(id)));
+        }
+        // Super-task as a sub-task.
+        else
+        {
+            // Find the super-task and add the sub-task.
+            put(root, id, new SuperTask(id, description));
+            Util.logger.info(() -> ("Added super-task '%s' as a sub-task.".formatted(id)));
+        }
+    }
+
+    public void add(String root, String id, String description, int effort)
+    {
+        // Task.
+        if (root.isEmpty())
+        {
+            tasks.put(id, new SubTask(id, description, effort));
+            Util.logger.info(() -> ("Added task '%s'.".formatted(id)));
+        }
+        // Task as a sub-task.
+        else
+        {
+            // Find the super-task and add the sub-task.
+            put(root, id, new SubTask(id, description, effort));
+            Util.logger.info(() -> ("Added task '%s' as a sub-task.".formatted(id)));
+        }
+    }
+
     // Update the effort estimate of a task or sub-task.
-    public void update(String id, int effort)
+    public void updateEffort(String id)
     {
         Task task = find(id);
 
         // If the task does not exist.
-        Util.check(task == null, "Unable to find task '%s' to update the effort estimate(s).".formatted(id));
+        Util.check(task == null, "Task '%s' does not exist.".formatted(id));
+        // If the task does not have effort estimate(s).
+        Util.check(!task.hasEffort(), "Task '%s' does not have effort estimate(s).".formatted(id));
 
-        // If found, then update the effort estimate.
-        task.update(effort);
-    }
-
-    // Check whether the task exists.
-    public boolean hasTask(String id)
-    {
-        Task task = find(id);
-
-        // If the task exists.
-        if (task != null)
-        {
-            return true;
-        }
-
-        return false;
+        // If found, then update the effort estimate(s).
+        task.updateEffort();
     }
 
     // Recursion is required to find a task that may be a sub-task.
@@ -110,10 +102,10 @@ public class WBS
             // If found.
             if (task != null)
             {
+                Util.logger.info(() -> ("Found task '%s'.".formatted(id)));
                 return task;
             }
         }
-
         return null;
     }
 
@@ -140,7 +132,6 @@ public class WBS
     public void display()
     {
         System.out.println(); // New line.
-
         tasks.forEach((id, task) -> task.display());
 
         System.out.println("\nTotal known effort = %d".formatted(sumEffort()));

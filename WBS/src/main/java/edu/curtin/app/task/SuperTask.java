@@ -9,7 +9,7 @@
  Reference:     None.
 
  Created:       31/08/2026
- Last Modified: 13/09/2026
+ Last Modified: 14/09/2026
 */
 
 package edu.curtin.app.task;
@@ -59,15 +59,25 @@ public class SuperTask implements Task
         tasks.put(id, task);
     }
 
-    // Update the effort estimate of a task or sub-task.
     @Override
-    public void update(int effort)
+    public boolean hasEffort()
     {
         for (Task task : tasks.values())
         {
-            // Recursion.
-            task.update(effort);
+            // If the super-task contains a sub-task.
+            if (task.hasEffort())
+            {
+                return true;
+            }
         }
+        return false;
+    }
+
+    // Update the effort estimate of a task or sub-task(s).
+    @Override
+    public void updateEffort()
+    {
+        tasks.forEach((id, task) -> task.updateEffort());
     }
 
     // Recursion is required to find a task that may be a sub-task.
@@ -95,7 +105,6 @@ public class SuperTask implements Task
                 }
             }
         }
-
         return null;
     }
 

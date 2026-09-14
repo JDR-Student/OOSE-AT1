@@ -9,7 +9,7 @@
  Reference:     None.
 
  Created:       31/08/2026
- Last Modified: 13/09/2026
+ Last Modified: 14/09/2026
 */
 
 package edu.curtin.app.task;
@@ -19,8 +19,11 @@ import java.io.*;
 // Component interface.
 public interface Task
 {
+    // Check whether the task has effort estimate(s).
+    boolean hasEffort();
+
     // Update the effort estimate.
-    void update(int effort);
+    void updateEffort();
 
     // Find a task.
     Task find(String id);

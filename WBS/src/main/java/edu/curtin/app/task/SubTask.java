@@ -5,18 +5,21 @@
 
  Purpose:       The leaf class for the composite pattern.
  Comments:      None.
- Requires:      Utilises util.
+ Requires:      Utilises user, util, and sub-menu.
  Reference:     None.
 
  Created:       31/08/2026
- Last Modified: 13/09/2026
+ Last Modified: 14/09/2026
 */
 
 package edu.curtin.app.task;
 
+import edu.curtin.app.User;
 import edu.curtin.app.Util;
+import edu.curtin.app.submenu.*;
 
 import java.io.*;
+import java.util.*;
 
 // Leaf class.
 public class SubTask implements Task
@@ -64,14 +67,8 @@ public class SubTask implements Task
         // If the effort estimate is negative.
         Util.check(effort < 0, "The effort estimate must be a positive integer.");
 
+        Util.logger.info(() -> ("Updated estimated effort from %d to %d.".formatted(this.effort, effort)));
         this.effort = effort;
-    }
-
-    // Update the effort estimate.
-    @Override
-    public void update(int effort)
-    {
-        setEffort(effort);
     }
 
     // If the effort estimate is known, then return true.
@@ -80,17 +77,51 @@ public class SubTask implements Task
         return effort > 0;
     }
 
+    @Override
+    public boolean hasEffort()
+    {
+        return true; // As this is a task or sub-task.
+    }
+
+    // Update the effort estimate.
+    @Override
+    public void updateEffort()
+    {
+        List<Integer> estimates = User.requestEstimates(id);
+
+        // If the effort estimates are the same.
+        if (estimates.stream().distinct().count() == 1)
+        {
+            setEffort(estimates.getFirst());
+        }
+        // If the effort estimates are different.
+        else
+        {
+            SubMenu submenu;
+            switch(User.getApproach())
+            {
+                // Highest estimate.
+                case 1: submenu = new Highest(estimates);
+                    break;
+                // Median estimate.
+                case 2: submenu = new Median(estimates);
+                    break;
+                // A single revised estimate.
+                case 3: submenu = new Revised();
+                    break;
+                // Invalid reconciliation approach.
+                default: submenu = new Invalid();
+            }
+            setEffort(submenu.option());
+        }
+    }
+
     // Find a task.
     @Override
     public Task find(String id)
     {
         // If this is the task.
-        if (getId().equals(id))
-        {
-            return this;
-        }
-
-        return null;
+        return getId().equals(id) ? this : null;
     }
 
     // Sum the total effort estimate.
@@ -133,7 +164,6 @@ public class SubTask implements Task
         {
             writer.write("; %s ; %s ;".formatted(id, description));
         }
-
         writer.newLine();
     }
 }
